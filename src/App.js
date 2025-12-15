@@ -1,0 +1,846 @@
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Phone, Menu, X, Star, Truck, Award, Users, Shield, Wrench, Moon, Sun } from 'lucide-react';
+import { useTheme } from './ThemeContext';
+
+const App = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const products = [
+    {
+      id: 1,
+      name: "PADRÃO 1 - 2,0 x 1,20 - 700kg",
+      price: "R$ 5.990",
+      priceEmplacado: "R$ 6.990",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Padrão+1",
+      category: "padrao",
+      rating: 5,
+      specs: "1 Eixo • 2,0 x 1,20m",
+      description: "Modelo versátil e compacto para uso geral, ideal para pequenas mudanças e transporte diário."
+    },
+    {
+      id: 2,
+      name: "PADRÃO 2 - 2,5 x 1,20 - 700kg",
+      price: "R$ 6.990",
+      priceEmplacado: "R$ 7.990",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Padrão+2",
+      category: "padrao",
+      rating: 5,
+      specs: "1 Eixo • 2,5 x 1,20m",
+      description: "Modelo maior, com mais espaço interno. Excelente para transporte de mercadorias volumosas."
+    },
+    {
+      id: 3,
+      name: "TRUCADA PADRÃO - 2,0 x 1,20 - 1500kg",
+      price: "R$ 8.990",
+      priceEmplacado: "R$ 9.990",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Trucada+Padrão",
+      category: "trucada",
+      rating: 5,
+      specs: "2 Eixos • 2,0 x 1,20m",
+      description: "Estrutura reforçada ideal para cargas pesadas e uso comercial."
+    },
+    {
+      id: 4,
+      name: "TRUCADA 2 - 2,5 x 1,20 - 1500kg",
+      price: "R$ 9.500",
+      priceEmplacado: "R$ 10.500",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Trucada+2",
+      category: "trucada",
+      rating: 5,
+      specs: "2 Eixos • 2,5 x 1,20m",
+      description: "Carretinha robusta com maior comprimento, ideal para cargas grandes e intensas."
+    },
+    {
+      id: 5,
+      name: "GAIOLA TRUCADA 1 - 2,0 x 1,20 x 1,0",
+      price: "R$ 10.500",
+      priceEmplacado: "R$ 11.500",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Gaiola+1",
+      category: "gaiola",
+      rating: 5,
+      specs: "2 Eixos • 1500kg",
+      description: "Ideal para cargas onde você precise de mais espaço em altura. Mais usada para garrafões, frutas, banquetas."
+    },
+    {
+      id: 6,
+      name: "GAIOLA TRUCADA 2 - 2,5 x 1,20",
+      price: "R$ 10.900",
+      priceEmplacado: "R$ 11.900",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Gaiola+2",
+      category: "gaiola",
+      rating: 5,
+      specs: "2 Eixos • 1500kg",
+      description: "Gaiola maior, excelente capacidade interna. Ideal para garrafões, frutas e cargas empilhadas."
+    },
+    {
+      id: 7,
+      name: "ASA DELTA - 1,90 - 1000kg",
+      price: "R$ 5.000",
+      priceEmplacado: "R$ 6.000",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Asa+Delta",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 1,90m",
+      description: "Modelo leve e inclinado para carregar uma moto ou carro (parte frontal). Carrega até caminhonetes pequenas."
+    },
+    {
+      id: 8,
+      name: "ASA DELTA 2 RAMPAS - 1,90 - 1000kg",
+      price: "R$ 5.900",
+      priceEmplacado: "R$ 6.900",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Asa+Delta+2",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 1,90m",
+      description: "Versão com duas rampas para facilitar carregamento. Leva duas motos ou um carro."
+    },
+    {
+      id: 9,
+      name: "1 MOTO - 2,0 x 1,20 - 700kg",
+      price: "R$ 5.600",
+      priceEmplacado: "R$ 6.600",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=1+Moto",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 2,0 x 1,20m",
+      description: "Compacta, ideal para transporte de uma moto com segurança."
+    },
+    {
+      id: 10,
+      name: "2 MOTOS - 2,0 x 1,20 - 700kg",
+      price: "R$ 6.200",
+      priceEmplacado: "R$ 7.200",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=2+Motos",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 2,0 x 1,20m",
+      description: "Transporte seguro de duas motos."
+    },
+    {
+      id: 11,
+      name: "3 MOTOS - 2,0 x 1,50 - 700kg",
+      price: "R$ 6.900",
+      priceEmplacado: "R$ 7.900",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=3+Motos",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 2,0 x 1,50m",
+      description: "Espaço ideal para três motos, com fixação reforçada."
+    },
+    {
+      id: 12,
+      name: "3 MOTOS PREMIUM - 2,30 x 1,50 - 700kg",
+      price: "R$ 9.500",
+      priceEmplacado: "R$ 10.500",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=3+Motos+Premium",
+      category: "moto",
+      rating: 5,
+      specs: "1 Eixo • 2,30 x 1,50m",
+      description: "Modelo premium com mais espaço e acabamento superior."
+    },
+    {
+      id: 13,
+      name: "PRANCHA - 2,0 x 1,50 - 700kg",
+      price: "R$ 5.000",
+      priceEmplacado: "R$ 6.000",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Prancha",
+      category: "prancha",
+      rating: 5,
+      specs: "1 Eixo • 2,0 x 1,50m",
+      description: "Plataforma ideal para motos, quadriciclos e equipamentos de som."
+    },
+    {
+      id: 14,
+      name: "PRANCHA TRUCADA - 2,0 x 1,50 - 1500kg",
+      price: "R$ 8.000",
+      priceEmplacado: "R$ 9.000",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Prancha+Trucada",
+      category: "prancha",
+      rating: 5,
+      specs: "2 Eixos • 2,0 x 1,50m",
+      description: "Ideal para som automotivo, baús frigoríficos e materiais diversos. Sem lateral."
+    },
+    {
+      id: 15,
+      name: "PRANCHA TRUCADA 2 - 2,5 x 1,50 - 1500kg",
+      price: "R$ 8.500",
+      priceEmplacado: "R$ 9.500",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Prancha+Trucada+2",
+      category: "prancha",
+      rating: 5,
+      specs: "2 Eixos • 2,5 x 1,50m",
+      description: "Versão maior, oferecendo mais área útil e estabilidade."
+    },
+    {
+      id: 16,
+      name: "PRANCHA CARRO - 4,0 x 1,90 - 1800kg",
+      price: "R$ 16.900",
+      priceEmplacado: "R$ 17.900",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Prancha+Carro",
+      category: "prancha",
+      rating: 5,
+      specs: "1 Eixo • 4,0 x 1,90m",
+      description: "Ideal para transporte de veículos, muito usada por oficinas e guinchos."
+    },
+    {
+      id: 17,
+      name: "JETSKI PADRÃO - 700kg",
+      price: "R$ 5.500",
+      priceEmplacado: "R$ 6.500",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Jetski+Padrão",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Reboque padrão para jetski, seguro e ajustável."
+    },
+    {
+      id: 18,
+      name: "JETSKI PREMIUM - 700kg",
+      price: "R$ 10.500",
+      priceEmplacado: "R$ 11.500",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Jetski+Premium",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Acabamento premium, maior estabilidade. Com rodas liga leve aro 15: R$ 14.900 (R$ 15.900 emplacado)."
+    },
+    {
+      id: 19,
+      name: "BERÇO 5MT - 700kg",
+      price: "R$ 5.990",
+      priceEmplacado: "R$ 6.990",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Berço+5m",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Reboque berço para barcos de até 5 metros."
+    },
+    {
+      id: 20,
+      name: "BERÇO 6MT - 700kg",
+      price: "R$ 6.990",
+      priceEmplacado: "R$ 7.990",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Berço+6m",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Ideal para barcos até 6 metros, com estrutura reforçada."
+    },
+    {
+      id: 21,
+      name: "BERÇO 7MT - 700kg",
+      price: "R$ 7.500",
+      priceEmplacado: "R$ 8.500",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Berço+7m",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Reboque para barcos maiores com excelente encaixe e suporte."
+    },
+    {
+      id: 22,
+      name: "BERÇO 9MT - 700kg",
+      price: "R$ 8.000",
+      priceEmplacado: "R$ 9.000",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Berço+9m",
+      category: "nautico",
+      rating: 5,
+      specs: "1 Eixo",
+      description: "Confiável para barcos de até 9 metros."
+    },
+    {
+      id: 23,
+      name: "BERÇO 9MT - 1500kg",
+      price: "R$ 10.900",
+      priceEmplacado: "R$ 11.900",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Berço+9m+Trucado",
+      category: "nautico",
+      rating: 5,
+      specs: "2 Eixos",
+      description: "Reforçado para barcos maiores e mais pesados."
+    },
+    {
+      id: 24,
+      name: "BOIADEIRO - 2,5 x 1,20 - 1500kg",
+      price: "R$ 13.900",
+      priceEmplacado: "R$ 14.900",
+      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Boiadeiro",
+      category: "animal",
+      rating: 5,
+      specs: "2 Eixos • 2,5 x 1,20m",
+      description: "Reboque ventilado para transporte de animais."
+    },
+    {
+      id: 25,
+      name: "CAVALO - 2,5 x 1,50 - 1500kg",
+      price: "R$ 20.900",
+      priceEmplacado: "R$ 21.900",
+      image: "https://placehold.co/400x300/FFFFFF/DC2626?text=Cavalo",
+      category: "animal",
+      rating: 5,
+      specs: "2 Eixos • 2,5 x 1,50m",
+      description: "Modelo projetado para transporte seguro de cavalos."
+    },
+    {
+      id: 26,
+      name: "PRANCHA GERADOR - 2,5 x 1,20 - 2400kg",
+      price: "R$ 15.900",
+      priceEmplacado: "R$ 16.900",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Gerador",
+      category: "prancha",
+      rating: 5,
+      specs: "2 Eixos • 2,5 x 1,20m • Aro 15",
+      description: "Estrutura dupla reforçada para geradores e máquinas pesadas. Rodas aro 15."
+    }
+  ];
+
+  const categories = [
+    { id: 'all', name: 'Todos' },
+    { id: 'padrao', name: 'Padrão' },
+    { id: 'trucada', name: 'Trucadas' },
+    { id: 'gaiola', name: 'Gaiolas' },
+    { id: 'moto', name: 'Motos' },
+    { id: 'prancha', name: 'Pranchas' },
+    { id: 'nautico', name: 'Náutico' },
+    { id: 'animal', name: 'Animais' }
+  ];
+
+  const testimonials = [
+    {
+      id: 1,
+      name: "Carlos Silva",
+      company: "Agropecuária Silva",
+      text: "Excelente qualidade nos reboques. Compramos 5 unidades e estão funcionando perfeitamente há 2 anos.",
+      rating: 5
+    },
+    {
+      id: 2,
+      name: "Roberto Santos",
+      company: "Transportes Santos",
+      text: "Atendimento impecável e produtos de alta qualidade. Recomendo fortemente para quem busca durabilidade.",
+      rating: 5
+    },
+    {
+      id: 3,
+      name: "Ana Costa",
+      company: "Construtora Costa",
+      text: "Os reboques são robustos e atendem perfeitamente nossas necessidades de transporte de materiais.",
+      rating: 4
+    }
+  ];
+
+  const services = [
+    {
+      icon: <Wrench className="w-8 h-8" />,
+      title: "Manutenção",
+      description: "Serviço completo de manutenção preventiva e corretiva"
+    },
+    {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Garantia",
+      description: "Garantia estendida com suporte técnico especializado"
+    },
+    {
+      icon: <Award className="w-8 h-8" />,
+      title: "Qualidade",
+      description: "Certificados de qualidade e normas de segurança rigorosas"
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Suporte",
+      description: "Equipe técnica disponível para consultoria e suporte"
+    }
+  ];
+
+  const filteredProducts = selectedCategory === 'all' 
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
+
+  const images = [
+    "https://placehold.co/1200x600/DC2626/FFFFFF?text=JR+REBOQUES",
+    "https://placehold.co/1200x600/1F2937/FFFFFF?text=Qualidade+e+Resistência",
+    "https://placehold.co/1200x600/FFFFFF/DC2626?text=Reboques+Profissionais"
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  useEffect(() => {
+    const testimonialInterval = setInterval(() => {
+      setActiveTestimonial((prev) => 
+        prev === testimonials.length - 1 ? 0 : prev + 1
+      );
+    }, 4000);
+
+    return () => clearInterval(testimonialInterval);
+  }, [testimonials.length]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50 transition-colors duration-300">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-2">
+              <Truck className="w-8 h-8 text-red-600" />
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                JR <span className="text-red-600">REBOQUES</span>
+              </h1>
+            </div>
+            
+            <nav className="hidden md:flex space-x-8 items-center">
+              <a href="#home" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium transition-colors">Início</a>
+              <a href="#produtos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium transition-colors">Produtos</a>
+              <a href="#sobre" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium transition-colors">Sobre</a>
+              <a href="#servicos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium transition-colors">Serviços</a>
+              <a href="#testemunhos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium transition-colors">Testemunhos</a>
+              
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                aria-label="Alternar tema"
+              >
+                {darkMode ? (
+                  <Sun className="w-5 h-5 text-yellow-500" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-700" />
+                )}
+              </button>
+            </nav>
+
+            <div className="md:hidden flex items-center space-x-2">
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                aria-label="Alternar tema"
+              >
+                {darkMode ? (
+                  <Sun className="w-5 h-5 text-yellow-500" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                )}
+              </button>
+              
+              <button 
+                className="text-gray-700 dark:text-gray-300"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+          </div>
+
+          {isMenuOpen && (
+            <div className="md:hidden py-4 border-t dark:border-gray-700">
+              <nav className="flex flex-col space-y-4">
+                <a href="#home" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium" onClick={() => setIsMenuOpen(false)}>Início</a>
+                <a href="#produtos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium" onClick={() => setIsMenuOpen(false)}>Produtos</a>
+                <a href="#sobre" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium" onClick={() => setIsMenuOpen(false)}>Sobre</a>
+                <a href="#servicos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium" onClick={() => setIsMenuOpen(false)}>Serviços</a>
+                <a href="#testemunhos" className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 font-medium" onClick={() => setIsMenuOpen(false)}>Testemunhos</a>
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section id="home" className="relative h-96 md:h-screen overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={images[currentImageIndex]} 
+            alt="JR Reboques" 
+            className="w-full h-full object-cover transition-opacity duration-1000"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        
+        <div className="relative z-10 h-full flex items-center justify-center text-center text-white">
+          <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-4xl md:text-6xl font-bold mb-4">
+              QUALIDADE E <span className="text-red-600">RESISTÊNCIA</span>
+            </h2>
+            <p className="text-xl md:text-2xl mb-8">
+              Reboques profissionais para todas as necessidades
+            </p>
+            <a href="#produtos">
+              <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                Ver Produtos
+              </button>
+            </a>
+          </div>
+        </div>
+
+        <button 
+          onClick={prevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        
+        <button 
+          onClick={nextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentImageIndex ? 'bg-red-600' : 'bg-white bg-opacity-50'
+              }`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="servicos" className="py-16 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Nossos <span className="text-red-600">Serviços</span>
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+              Além da venda, oferecemos uma completa linha de serviços para seus reboques
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition-all">
+                <div className="bg-red-600 text-white p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  {service.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{service.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section */}
+      <section id="produtos" className="py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Nossos <span className="text-red-600">Produtos</span>
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+              Reboques de alta qualidade para todas as aplicações, fabricados com os melhores materiais
+            </p>
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-6 py-2 rounded-full font-medium transition-all ${
+                  selectedCategory === category.id
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProducts.map(product => (
+              <div key={product.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all group">
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    {product.price}
+                  </div>
+                  {product.priceEmplacado && (
+                    <div className="absolute top-12 right-4 bg-gray-900 text-white px-3 py-1 rounded-full text-xs">
+                      Emplacado: {product.priceEmplacado}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-6">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{product.name}</h3>
+                  {product.specs && (
+                    <p className="text-sm text-red-600 font-semibold mb-2">{product.specs}</p>
+                  )}
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">{product.description}</p>
+                  
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star 
+                        key={i} 
+                        className={`w-4 h-4 ${i < product.rating ? 'text-yellow-400 fill-current' : 'text-gray-300 dark:text-gray-600'}`} 
+                      />
+                    ))}
+                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">({product.rating}/5)</span>
+                  </div>
+                  
+                  <a 
+                    href={`https://wa.me/5591982250731?text=${encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para o reboque:\n\n📦 ${product.name}\n${product.specs ? `📏 ${product.specs}\n` : ''}💰 ${product.price}${product.priceEmplacado ? ` (Emplacado: ${product.priceEmplacado})` : ''}\n\nPoderia me enviar mais informações?`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Phone className="w-4 h-4" />
+                    Solicitar Orçamento
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Diferenciais e Adicionais */}
+          <div className="mt-16 bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                  <Shield className="w-6 h-6 text-red-600 mr-2" />
+                  Nossos Diferenciais
+                </h3>
+                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start">
+                    <span className="text-red-600 mr-2">✓</span>
+                    <span>Perfil enrijecido (não utilizamos perfil U)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 mr-2">✓</span>
+                    <span>Cubo Fiat Strada blindado com furação 4x100</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 mr-2">✓</span>
+                    <span>Madeira de alta qualidade linha Ipê</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-red-600 mr-2">✓</span>
+                    <span>Pneus novos aro 13 (não utilizamos remold)</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  ➕ Adicionais Disponíveis
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-300">Baú frontal</span>
+                    <span className="font-bold text-red-600">R$ 400,00</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-300">Suporte de lona</span>
+                    <span className="font-bold text-red-600">R$ 400,00</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span className="text-gray-700 dark:text-gray-300">Emplacamento avulso</span>
+                    <span className="font-bold text-red-600">R$ 1.900,00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="sobre" className="py-16 bg-gray-900 text-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Sobre a <span className="text-red-600">JR Reboques</span>
+              </h2>
+              <p className="text-gray-300 text-lg mb-6">
+                Com mais de 15 anos de experiência no mercado, a JR Reboques se destaca pela qualidade 
+                superior de seus produtos e atendimento personalizado. Fabricamos reboques para todas 
+                as necessidades, desde uso agrícola até transporte industrial.
+              </p>
+              <p className="text-gray-300 text-lg mb-8">
+                Nossa missão é oferecer soluções confiáveis e duráveis para nossos clientes, 
+                garantindo segurança e eficiência em cada produto entregue.
+              </p>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">500+</div>
+                  <div className="text-gray-300">Clientes Satisfeitos</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">15+</div>
+                  <div className="text-gray-300">Anos de Experiência</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">100%</div>
+                  <div className="text-gray-300">Satisfação</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">24/7</div>
+                  <div className="text-gray-300">Suporte</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <img 
+                src="https://placehold.co/600x400/DC2626/FFFFFF?text=Fábrica+JR+Reboques" 
+                alt="Fábrica JR Reboques"
+                className="rounded-lg shadow-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testemunhos" className="py-16 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              O que dizem <span className="text-red-600">nossos clientes</span>
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+              Depoimentos de quem já experimentou a qualidade dos nossos reboques
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-8 text-center relative transition-colors duration-300">
+              <div className="flex justify-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star 
+                    key={i} 
+                    className={`w-5 h-5 ${i < testimonials[activeTestimonial].rating ? 'text-yellow-400 fill-current' : 'text-gray-300 dark:text-gray-600'}`} 
+                  />
+                ))}
+              </div>
+              
+              <p className="text-gray-700 dark:text-gray-300 text-lg italic mb-6">
+                "{testimonials[activeTestimonial].text}"
+              </p>
+              
+              <div className="font-semibold text-gray-900 dark:text-white">
+                {testimonials[activeTestimonial].name}
+              </div>
+              <div className="text-red-600">
+                {testimonials[activeTestimonial].company}
+              </div>
+
+              <div className="flex justify-center mt-6 space-x-2">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveTestimonial(index)}
+                    className={`w-3 h-3 rounded-full transition-all ${
+                      index === activeTestimonial ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-950 dark:bg-black text-white py-12 border-t border-gray-800 dark:border-gray-900 transition-colors duration-300">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Truck className="w-8 h-8 text-red-600" />
+                <h3 className="text-xl font-bold">JR REBOQUES</h3>
+              </div>
+              <p className="text-gray-400">
+                Reboques de qualidade para todas as necessidades, com garantia e suporte técnico.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Produtos</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#produtos" className="hover:text-white transition-colors">Agrícolas</a></li>
+                <li><a href="#produtos" className="hover:text-white transition-colors">Utilitários</a></li>
+                <li><a href="#produtos" className="hover:text-white transition-colors">Fechados</a></li>
+                <li><a href="#produtos" className="hover:text-white transition-colors">Especiais</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Links</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#home" className="hover:text-white transition-colors">Início</a></li>
+                <li><a href="#produtos" className="hover:text-white transition-colors">Produtos</a></li>
+                <li><a href="#sobre" className="hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="#servicos" className="hover:text-white transition-colors">Serviços</a></li>
+                <li><a href="#testemunhos" className="hover:text-white transition-colors">Testemunhos</a></li>
+                <li><a href="#contato" className="hover:text-white transition-colors">Contato</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Horário de Funcionamento</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>Seg-Sex: 8h às 18h</li>
+                <li>Sábado: 8h às 12h</li>
+                <li>Domingo: Fechado</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 dark:border-gray-900 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 JR Reboques. Todos os direitos reservados.</p>
+          </div>
+        </div>
+      </footer>
+      
+      {/* WhatsApp Float Button */}
+      <a
+        href="https://wa.me/5591982250731?text=Olá!%20Gostaria%20de%20mais%20informações%20sobre%20os%20reboques%20da%20JR%20Reboques."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-24 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all hover:scale-110 z-40"
+        aria-label="Contato WhatsApp"
+      >
+        <Phone className="w-6 h-6" />
+      </a>
+    </div>
+  );
+};
+
+export default App;
