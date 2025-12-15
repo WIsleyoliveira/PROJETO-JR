@@ -66,7 +66,7 @@ const App = () => {
       description: "Carretinha robusta com maior comprimento, ideal para cargas grandes e intensas."
     },
     {
-      id:  6,
+      id: 5,
       name: "GAIOLA TRUCADA 1 - 2,0 x 1,20 x 1,0",
       price: "R$ 10.500",
       priceEmplacado: "R$ 11.500",
@@ -154,7 +154,7 @@ const App = () => {
       description: "Modelo premium com mais espaço e acabamento superior."
     },
     {
-      id:  14,
+      id: 13,
       name: "10 MOTOS - 4,0 x 2,0 - 1500kg",
       price: "R$ 15.900",
       priceEmplacado: "R$ 16.900",
@@ -312,7 +312,7 @@ const App = () => {
       name: "PRANCHA GERADOR - 2,5 x 1,20 - 2400kg",
       price: "R$ 15.900",
       priceEmplacado: "R$ 16.900",
-      image: "/images/gerador-prancha.jpg",
+      image: "https://placehold.co/400x300/DC2626/FFFFFF?text=Gerador",
       category: "prancha",
       rating: 5,
       specs: "2 Eixos • 2,5 x 1,20m • Aro 15",
