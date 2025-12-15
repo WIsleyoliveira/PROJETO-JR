@@ -48,7 +48,7 @@ const App = () => {
       name: "TRUCADA 2 - 2,5 x 1,20 - 1500kg",
       price: "R$ 9.500",
       priceEmplacado: "R$ 10.500",
-      image: "https://placehold.co/400x300/1F2937/FFFFFF?text=Trucada+2",
+      image: "/images/trucada-2-azul.jpg",
       category: "trucada",
       rating: 5,
       specs: "2 Eixos • 2,5 x 1,20m",
